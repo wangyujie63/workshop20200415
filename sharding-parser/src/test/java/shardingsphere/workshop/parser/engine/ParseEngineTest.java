@@ -18,6 +18,7 @@
 package shardingsphere.workshop.parser.engine;
 
 import org.junit.Test;
+import shardingsphere.workshop.parser.statement.statement.QueryStatement;
 import shardingsphere.workshop.parser.statement.statement.UseStatement;
 
 import java.util.List;
@@ -33,6 +34,16 @@ public final class ParseEngineTest {
         UseStatement useStatement = (UseStatement) ParseEngine.parse(sql);
         assertThat(useStatement.getSchemeName().getIdentifier().getValue(), is("sharding_db"));
     }
+
+
+    @Test
+    public void testQueryParse() {
+        String sql = "select user_id,order_no from t_order where order_no>1";
+        QueryStatement queryStatement = (QueryStatement) ParseEngine.parse(sql);
+        System.out.println(queryStatement);
+        //assertThat(useStatement.getSchemeName().getIdentifier().getValue(), is("sharding_db"));
+    }
+
 
     @Test
     public void test() {

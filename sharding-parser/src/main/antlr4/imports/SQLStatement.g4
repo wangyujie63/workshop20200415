@@ -38,4 +38,23 @@ tableName
 identifier
     : IDENTIFIER_ | STRING_ | NUMBER_
     ;
-    
+
+select
+    : SELECT selectElements FROM schemaName whereClause?
+    ;
+
+selectElements
+    : (ASTERISK_ | columnName ) (COMMA_ columnName)*
+    ;
+
+whereClause
+    : WHERE logicExpression
+    ;
+
+logicExpression
+   : columnName comparisonOperator assignmentValue
+   ;
+
+comparisonOperator
+    : GT_ | GTE_ | LT_ | LTE_ | EQ_ | NEQ_
+    ;
