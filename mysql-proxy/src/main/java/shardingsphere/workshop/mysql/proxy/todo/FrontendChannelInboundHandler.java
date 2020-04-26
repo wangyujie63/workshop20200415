@@ -172,12 +172,12 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
                 String comparisonValue = whereClause.getLogicExpression().getIdentifier().getIdentifier().getValue();
                 //运算符
                 String comparisonOperator = whereClause.getLogicExpression().getComparisonOperator();
-
+                //条件列的索引
                 int index = columnNameList.indexOf(comparisonColumn.toLowerCase());
-                //条件列的row值
                 if (index == -1) {
                     throw new IllegalStateException("Unknown column  " + comparisonColumn + " near where at line 1");
                 }
+                //条件列的row值
                 String value = rowValue[index];
                 if (!checkComparisonValue(comparisonValue, value, comparisonOperator)) {
                     continue;
