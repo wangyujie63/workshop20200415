@@ -114,7 +114,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         if (!tableName.equalsIgnoreCase(queryStatement.getTableName().getIdentifier().getValue())) {
             throw new IllegalStateException("only support query table form t_order ");
         }
-        //组装context
+        //按照mysql的返包规则组装context
         dealChannelHandlerContext(columnNameList, columnType, rowsInfo, queryStatement, context);
         context.flush();
     }
@@ -173,7 +173,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
                 //运算符
                 String comparisonOperator = whereClause.getLogicExpression().getComparisonOperator();
 
-                int index = columnNameList.indexOf(comparisonColumn);
+                int index = columnNameList.indexOf(comparisonColumn.toLowerCase());
                 //条件列的row值
                 if (index == -1) {
                     throw new IllegalStateException("Unknown column  " + comparisonColumn + " near where at line 1");
