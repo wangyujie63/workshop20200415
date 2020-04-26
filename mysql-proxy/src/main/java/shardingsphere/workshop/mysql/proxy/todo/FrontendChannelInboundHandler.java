@@ -127,7 +127,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
      * @param queryStatement 解析sql得到的statement
      * @param context
      */
-    private void dealChannelHandlerContext(List<String> columnNameList,Map<String,Object> columnType,String[] rowsInfo,QueryStatement queryStatement,final ChannelHandlerContext context){
+    private void dealChannelHandlerContext(List<String> columnNameList, Map<String,Object> columnType, String[] rowsInfo, QueryStatement queryStatement, final ChannelHandlerContext context){
         //取出查询的表名
         String tableName = queryStatement.getTableName().getIdentifier().getValue();
         //取出查询的列名
@@ -176,10 +176,10 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
                 int index = columnNameList.indexOf(comparisonColumn);
                 //条件列的row值
                 if (index == -1) {
-                    throw new IllegalStateException("You have an error in your SQL syntax;Unknown column  "+ comparisonColumn + " near where at line 1");
+                    throw new IllegalStateException("Unknown column  " + comparisonColumn + " near where at line 1");
                 }
                 String value = rowValue[index];
-                if (!checkComparisonValue(comparisonValue,value,comparisonOperator)) {
+                if (!checkComparisonValue(comparisonValue, value, comparisonOperator)) {
                     continue;
                 }
             }
@@ -258,7 +258,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
      * @param selectElements
      * @return
      */
-    private List<String> getSelectedColumnNames(List<String> columnNameList,SelectElementsSegment selectElements){
+    private List<String> getSelectedColumnNames(List<String> columnNameList, SelectElementsSegment selectElements){
         List<String> selectedColumn = new LinkedList<>();
         //判断查询的列中有没有*
         String ASTERISK_ = selectElements.getASTERISK_();
