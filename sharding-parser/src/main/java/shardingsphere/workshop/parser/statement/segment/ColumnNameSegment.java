@@ -8,7 +8,7 @@ import shardingsphere.workshop.parser.statement.ASTNode;
 /**
  * Column name segment.
  *
- * @author wangyujie
+ * @author wangyujie63
  */
 @RequiredArgsConstructor
 @Getter

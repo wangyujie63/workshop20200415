@@ -11,7 +11,7 @@ import shardingsphere.workshop.parser.statement.segment.WhereClauseSegment;
 /**
  * Query statement.
  *
- * @author wangyujie
+ * @author wangyujie63
  */
 @RequiredArgsConstructor
 @Getter
