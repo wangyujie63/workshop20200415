@@ -1,3 +1,4 @@
+
 package shardingsphere.workshop.parser.statement.segment;
 
 import lombok.Getter;
@@ -5,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 import shardingsphere.workshop.parser.statement.ASTNode;
 
 /**
- * where condition
- * @author wangyujie63
+ * Table name segment.
  *
+ * @author wangyujie63
  */
 @RequiredArgsConstructor
 @Getter
-public class WhereClauseSegment implements ASTNode {
-
-    private final LogicExpressionSegment logicExpression;
+public final class TableNameSegment implements ASTNode {
+    
+    private final IdentifierSegment identifier;
 
 }

@@ -4,11 +4,9 @@ package shardingsphere.workshop.parser.statement.statement;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import shardingsphere.workshop.parser.statement.ASTNode;
-import shardingsphere.workshop.parser.statement.segment.SchemeNameSegment;
 import shardingsphere.workshop.parser.statement.segment.SelectElementsSegment;
+import shardingsphere.workshop.parser.statement.segment.TableNameSegment;
 import shardingsphere.workshop.parser.statement.segment.WhereClauseSegment;
-
-import javax.swing.text.Segment;
 
 /**
  * Query statement.
@@ -18,10 +16,19 @@ import javax.swing.text.Segment;
 @RequiredArgsConstructor
 @Getter
 public final class QueryStatement implements ASTNode {
-    
-    private final SchemeNameSegment schemeName;
 
+    /**
+     * selected table name
+     */
+    private final TableNameSegment tableName;
+
+    /**
+     *  selected column
+     */
     private final SelectElementsSegment selectElements;
 
+    /**
+     * where condition
+     */
     private final WhereClauseSegment whereClause;
 }

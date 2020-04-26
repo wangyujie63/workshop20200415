@@ -40,7 +40,7 @@ identifier
     ;
 
 select
-    : SELECT selectElements FROM schemaName whereClause?
+    : SELECT selectElements FROM tableName (whereClause)?
     ;
 
 selectElements

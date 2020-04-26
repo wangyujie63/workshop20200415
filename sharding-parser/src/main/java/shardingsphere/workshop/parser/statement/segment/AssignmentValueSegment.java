@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import shardingsphere.workshop.parser.statement.ASTNode;
 
 /**
- * Scheme name segment.
+ * Assignment value segment.
  *
- * @author panjuan
+ * @author wangyuie63
  */
 @RequiredArgsConstructor
 @Getter

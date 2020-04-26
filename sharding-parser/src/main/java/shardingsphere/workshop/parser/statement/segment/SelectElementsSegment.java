@@ -7,6 +7,7 @@ import shardingsphere.workshop.parser.statement.ASTNode;
 import java.util.List;
 
 /**
+ * SelectedElements
  * @author wangyujie63
  *
  */
@@ -14,6 +15,14 @@ import java.util.List;
 @Getter
 public class SelectElementsSegment implements ASTNode {
 
+    /**
+     * column name
+     */
     private final List<ColumnNameSegment> columnName;
+
+    /**
+     *  "*"
+     */
     private final String ASTERISK_;
+
 }

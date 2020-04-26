@@ -21,7 +21,6 @@ import org.junit.Test;
 import shardingsphere.workshop.parser.statement.statement.QueryStatement;
 import shardingsphere.workshop.parser.statement.statement.UseStatement;
 
-import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
@@ -38,10 +37,10 @@ public final class ParseEngineTest {
 
     @Test
     public void testQueryParse() {
-        String sql = "select user_id,order_no from t_order where order_no>1";
+        String sql = "select *,order_id from t_order";
         QueryStatement queryStatement = (QueryStatement) ParseEngine.parse(sql);
         System.out.println(queryStatement);
-        //assertThat(useStatement.getSchemeName().getIdentifier().getValue(), is("sharding_db"));
+        assertThat(queryStatement.getTableName().getIdentifier().getValue(), is("t_order"));
     }
 
 
