@@ -175,11 +175,12 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
 
                 int index = columnNameList.indexOf(comparisonColumn);
                 //条件列的row值
-                if (index!=-1) {
-                    String value = rowValue[index];
-                    if (!checkComparisonValue(comparisonValue,value,comparisonOperator)) {
-                        continue;
-                    }
+                if (index == -1) {
+                    throw new IllegalStateException("You have an error in your SQL syntax;Unknown column  "+ comparisonColumn + " near 'where' at line 1");
+                }
+                String value = rowValue[index];
+                if (!checkComparisonValue(comparisonValue,value,comparisonOperator)) {
+                    continue;
                 }
             }
             //过滤之后组装值
