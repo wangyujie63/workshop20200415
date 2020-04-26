@@ -101,12 +101,13 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         String[] rowsInfo = new String[]{"1000001,10,init","2000001,20,init","3000001,30,init"};
         //表中所有的列名，有顺序
         List<String> columnNameList = new LinkedList<>();
-        //每列对应的数据类型（key：列名，value：long，string...）
-        Map<String,Object> columnType = new HashMap<>();
+        //每列对应的数据类型（key：列名，value：MySQLColumnType）
+        Map<String,MySQLColumnType> columnType = new HashMap<>();
+        //取出数据类型
         for (String column:columnInfo.split(",")){
             String[] info = column.split(":");
             columnNameList.add(info[0]);
-            columnType.put(info[0],info[1]);
+            columnType.put(info[0],getColumnType(info[1]));
         }
         //用parser解析sql
         QueryStatement queryStatement = (QueryStatement) ParseEngine.parse(sql);
@@ -127,7 +128,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
      * @param queryStatement 解析sql得到的statement
      * @param context
      */
-    private void dealChannelHandlerContext(List<String> columnNameList, Map<String,Object> columnType, String[] rowsInfo, QueryStatement queryStatement, final ChannelHandlerContext context){
+    private void dealChannelHandlerContext(List<String> columnNameList, Map<String,MySQLColumnType> columnType, String[] rowsInfo, QueryStatement queryStatement, final ChannelHandlerContext context){
         //取出查询的表名
         String tableName = queryStatement.getTableName().getIdentifier().getValue();
         //取出查询的列名
@@ -144,9 +145,8 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         Map<String,Integer> countMap = new HashMap<>();
         for (int i=0; i<columnCount; i++){
             String columnName = selectedColumn.get(i);
-            String columnTypeName = columnType.get(columnName).toString();
             //取出数据类型
-            MySQLColumnType myColumnType = getColumnType(columnTypeName);
+            MySQLColumnType myColumnType = columnType.get(columnName);
             if (!countMap.containsKey(columnName)){
                 countMap.put(columnName,0);
             } else {
