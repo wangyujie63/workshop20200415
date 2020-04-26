@@ -111,7 +111,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         //用parser解析sql
         QueryStatement queryStatement = (QueryStatement) ParseEngine.parse(sql);
         //只能查t_order表中的数据 否则抛出异常
-        if(!tableName.equalsIgnoreCase(queryStatement.getTableName().getIdentifier().getValue())) {
+        if (!tableName.equalsIgnoreCase(queryStatement.getTableName().getIdentifier().getValue())) {
             throw new IllegalStateException("only support query table form t_order ");
         }
         //组装context
@@ -175,7 +175,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
 
                 int index = columnNameList.indexOf(comparisonColumn);
                 //条件列的row值
-                if(index!=-1) {
+                if (index!=-1) {
                     String value = rowValue[index];
                     if (!checkComparisonValue(comparisonValue,value,comparisonOperator)) {
                         continue;
@@ -184,7 +184,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
             }
             //过滤之后组装值
             List<Object> data = new ArrayList<>();
-            for(int i=0; i<columnCount; i++){
+            for (int i=0; i<columnCount; i++){
                 //按顺序取出列对应的值
                 int columnIndex = columnNameList.indexOf(selectedColumn.get(i));
                 String value = rowValue[columnIndex];
@@ -245,7 +245,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         if ("long".equalsIgnoreCase(columnTypeName)){
             mySQLColumnType = MySQLColumnType.valueOfJDBCType(Types.BIGINT);
         }
-        if("string".equalsIgnoreCase(columnTypeName)){
+        if ("string".equalsIgnoreCase(columnTypeName)){
             mySQLColumnType = MySQLColumnType.valueOfJDBCType(Types.VARCHAR);
         }
         return mySQLColumnType;
@@ -267,7 +267,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         List<ColumnNameSegment> columnNameSegments = selectElements.getColumnName();
         if (CollectionUtils.isNotEmpty(columnNameSegments)) {
             for (ColumnNameSegment columnNameSegment : columnNameSegments) {
-                if(columnNameList.indexOf(columnNameSegment.getIdentifier().getValue().toLowerCase())==-1){
+                if (columnNameList.indexOf(columnNameSegment.getIdentifier().getValue().toLowerCase())==-1){
                     throw new IllegalStateException("Unknown column  "+ columnNameSegment.getIdentifier().getValue() + " in field list");
                 }
                 selectedColumn.add(columnNameSegment.getIdentifier().getValue().toLowerCase());
