@@ -96,18 +96,18 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
 //        context.flush();
         // TODO 3. Parse SQL, return actual data according to SQLStatement
         //先把csv表数据放入内存中
-        String tableName ="t_order";
+        String tableName = "t_order";
         String columnInfo = "order_id:long,user_id:int,status:string";
-        String[] rowsInfo = new String[]{"1000001,10,init","2000001,20,init","3000001,30,init"};
+        String[] rowsInfo = new String[]{"1000001,10,init", "2000001,20,init", "3000001,30,init"};
         //表中所有的列名，有顺序
         List<String> columnNameList = new LinkedList<>();
         //每列对应的数据类型（key：列名，value：MySQLColumnType）
-        Map<String,MySQLColumnType> columnType = new HashMap<>();
+        Map<String, MySQLColumnType> columnType = new HashMap<>();
         //取出数据类型
-        for (String column:columnInfo.split(",")){
+        for (String column : columnInfo.split(",")) {
             String[] info = column.split(":");
             columnNameList.add(info[0]);
-            columnType.put(info[0],getColumnType(info[1]));
+            columnType.put(info[0], getColumnType(info[1]));
         }
         //用parser解析sql
         QueryStatement queryStatement = (QueryStatement) ParseEngine.parse(sql);
@@ -128,7 +128,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
      * @param queryStatement 解析sql得到的statement
      * @param context
      */
-    private void dealChannelHandlerContext(List<String> columnNameList, Map<String,MySQLColumnType> columnType, String[] rowsInfo, QueryStatement queryStatement, final ChannelHandlerContext context){
+    private void dealChannelHandlerContext(List<String> columnNameList, Map<String, MySQLColumnType> columnType, String[] rowsInfo, QueryStatement queryStatement, final ChannelHandlerContext context) {
         //取出查询的表名
         String tableName = queryStatement.getTableName().getIdentifier().getValue();
         //取出查询的列名
@@ -137,34 +137,34 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
         WhereClauseSegment whereClause = queryStatement.getWhereClause();
 
         //取出sql中查询的列名
-        List<String> selectedColumn = getSelectedColumnNames(columnNameList,selectElements);
+        List<String> selectedColumn = getSelectedColumnNames(columnNameList, selectElements);
         int columnCount = selectedColumn.size();
         int sequenceId = 0;
         context.write(new MySQLFieldCountPacket(++sequenceId, columnCount));
         //列名出现的次数，有可能用户输入相同的列,输出的时候区分开
-        Map<String,Integer> countMap = new HashMap<>();
-        for (int i=0; i<columnCount; i++){
+        Map<String, Integer> countMap = new HashMap<>();
+        for (int i = 0; i < columnCount; i++) {
             String columnName = selectedColumn.get(i);
             //取出数据类型
             MySQLColumnType myColumnType = columnType.get(columnName);
-            if (!countMap.containsKey(columnName)){
-                countMap.put(columnName,0);
+            if (!countMap.containsKey(columnName)) {
+                countMap.put(columnName, 0);
             } else {
                 int count = countMap.get(columnName);
-                countMap.put(columnName,count+1);
+                countMap.put(columnName, count + 1);
             }
-            if (countMap.get(columnName)>0){
+            if (countMap.get(columnName) > 0) {
                 //重复的列 展示时列名加上次数
                 columnName = columnName + countMap.get(columnName);
             }
-            context.write(new MySQLColumnDefinition41Packet(++sequenceId, 0, "sharding_db", tableName, tableName, columnName, columnName, 100, myColumnType,0));
+            context.write(new MySQLColumnDefinition41Packet(++sequenceId, 0, "sharding_db", tableName, tableName, columnName, columnName, 100, myColumnType, 0));
         }
         context.write(new MySQLEofPacket(++sequenceId));
 
         //取出所有值
-        for (String rowData:rowsInfo){
-            String[] rowValue =  rowData.split(",");
-            if (whereClause != null){
+        for (String rowData : rowsInfo) {
+            String[] rowValue = rowData.split(",");
+            if (whereClause != null) {
                 //根据查询条件whereClause 处理数据rows
                 //条件列
                 String comparisonColumn = whereClause.getLogicExpression().getColumnName().getIdentifier().getValue();
@@ -185,7 +185,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
             }
             //过滤之后组装值
             List<Object> data = new ArrayList<>();
-            for (int i=0; i<columnCount; i++){
+            for (int i = 0; i < columnCount; i++) {
                 //按顺序取出列对应的值
                 int columnIndex = columnNameList.indexOf(selectedColumn.get(i));
                 String value = rowValue[columnIndex];
@@ -200,6 +200,7 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
     /**
      * 表达式判断是否满足条件
      * 此方法应该将列的数据类型传进来 根据数据类型进行比较大小
+     *
      * @param comparisonValue
      * @param rowValue
      * @param comparisonOperator
@@ -208,10 +209,10 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
     private boolean checkComparisonValue(String comparisonValue, String rowValue, String comparisonOperator) {
         boolean result;
         switch (comparisonOperator) {
-            case "=" :
+            case "=":
                 result = rowValue.equals(comparisonValue);
                 break;
-            case ">" :
+            case ">":
                 result = Integer.valueOf(rowValue).intValue() > Integer.valueOf(comparisonValue).intValue();
                 break;
             case ">=":
@@ -235,18 +236,19 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
     /**
      * 获取对应字段的数据类型
      * 伪代码
+     *
      * @param columnTypeName
      * @return
      */
-    private MySQLColumnType getColumnType(String columnTypeName){
+    private MySQLColumnType getColumnType(String columnTypeName) {
         MySQLColumnType mySQLColumnType = MySQLColumnType.MYSQL_TYPE_STRING;
-        if ("int".equalsIgnoreCase(columnTypeName)){
+        if ("int".equalsIgnoreCase(columnTypeName)) {
             mySQLColumnType = MySQLColumnType.valueOfJDBCType(Types.INTEGER);
         }
-        if ("long".equalsIgnoreCase(columnTypeName)){
+        if ("long".equalsIgnoreCase(columnTypeName)) {
             mySQLColumnType = MySQLColumnType.valueOfJDBCType(Types.BIGINT);
         }
-        if ("string".equalsIgnoreCase(columnTypeName)){
+        if ("string".equalsIgnoreCase(columnTypeName)) {
             mySQLColumnType = MySQLColumnType.valueOfJDBCType(Types.VARCHAR);
         }
         return mySQLColumnType;
@@ -254,22 +256,23 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
 
     /**
      * 取出sql中查询的列名
+     *
      * @param columnNameList
      * @param selectElements
      * @return
      */
-    private List<String> getSelectedColumnNames(List<String> columnNameList, SelectElementsSegment selectElements){
+    private List<String> getSelectedColumnNames(List<String> columnNameList, SelectElementsSegment selectElements) {
         List<String> selectedColumn = new LinkedList<>();
         //判断查询的列中有没有*
         String ASTERISK_ = selectElements.getASTERISK_();
-        if (SYMBOL.equals(ASTERISK_)){
+        if (SYMBOL.equals(ASTERISK_)) {
             selectedColumn.addAll(columnNameList);
         }
         List<ColumnNameSegment> columnNameSegments = selectElements.getColumnName();
         if (CollectionUtils.isNotEmpty(columnNameSegments)) {
             for (ColumnNameSegment columnNameSegment : columnNameSegments) {
-                if (columnNameList.indexOf(columnNameSegment.getIdentifier().getValue().toLowerCase())==-1){
-                    throw new IllegalStateException("Unknown column  "+ columnNameSegment.getIdentifier().getValue() + " in field list");
+                if (columnNameList.indexOf(columnNameSegment.getIdentifier().getValue().toLowerCase()) == -1) {
+                    throw new IllegalStateException("Unknown column  " + columnNameSegment.getIdentifier().getValue() + " in field list");
                 }
                 selectedColumn.add(columnNameSegment.getIdentifier().getValue().toLowerCase());
             }
