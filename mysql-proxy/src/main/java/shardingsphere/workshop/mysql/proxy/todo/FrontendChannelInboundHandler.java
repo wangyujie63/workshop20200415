@@ -122,9 +122,9 @@ public final class FrontendChannelInboundHandler extends ChannelInboundHandlerAd
 
     /**
      * 按照mysql的返包规则组装context
-     * @param columnNameList 表的列名
+     * @param columnNameList 表的所有列名
      * @param columnType  表的列的数据类型属性
-     * @param rowsInfo 表中所有的列
+     * @param rowsInfo 表中所有的行
      * @param queryStatement 解析sql得到的statement
      * @param context
      */
